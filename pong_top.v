@@ -12,7 +12,7 @@
 module pong_top(
     input clk,              // 100MHz
     input reset,            // btnR
-    input [1:0] btn,        // btnD, btnU
+    input [3:0] btn,        // btnU, btnL, btnR, btnD
     output hsync,           // to VGA Connector
     output vsync,           // to VGA Connector
     output [11:0] rgb       // to DAC, to VGA Connector
@@ -28,14 +28,14 @@ module pong_top(
     // signal declaration
     reg [1:0] state_reg, state_next;
     wire [9:0] w_x, w_y;
-    wire w_vid_on, w_p_tick, graph_on, hit, miss;
+    wire w_vid_on, w_p_tick, graph_on, pts_1, pts_2;
     wire [3:0] text_on;
     wire [11:0] graph_rgb, text_rgb;
     reg [11:0] rgb_reg, rgb_next;
-    wire [3:0] dig0, dig1;
-    reg gra_still, d_inc, d_clr, timer_start;
+    wire [3:0] dig3, dig2, dig1, dig0;
+    reg gra_still, d1_inc, d1_clr, d2_inc, d2_clr, timer_start;
     wire timer_tick, timer_up;
-    reg [1:0] ball_reg, ball_next;
+    reg [6:0] ball_reg, ball_next;
     
     
     // Module Instantiations
@@ -67,8 +67,8 @@ module pong_top(
         .video_on(w_vid_on),
         .x(w_x),
         .y(w_y),
-        .hit(hit),
-        .miss(miss),
+        .pts_1(pts_1),
+        .pts_2(pts_2),
         .graph_on(graph_on),
         .graph_rgb(graph_rgb));
     
@@ -81,14 +81,21 @@ module pong_top(
         .timer_start(timer_start),
         .timer_up(timer_up));
     
-    m100_counter counter_unit(
+    m100_counter counter_unit_1(
         .clk(clk),
         .reset(reset),
-        .d_inc(d_inc),
-        .d_clr(d_clr),
+        .d_inc(d1_inc),
+        .d_clr(d1_clr),
+        .dig0(dig2),
+        .dig1(dig3));
+        
+    m100_counter counter_unit_2(
+        .clk(clk),
+        .reset(reset),
+        .d_inc(d2_inc),
+        .d_clr(d2_clr),
         .dig0(dig0),
         .dig1(dig1));
-       
     
     // FSMD state and registers
     always @(posedge clk or posedge reset)
@@ -109,15 +116,18 @@ module pong_top(
     always @* begin
         gra_still = 1'b1;
         timer_start = 1'b0;
-        d_inc = 1'b0;
-        d_clr = 1'b0;
+        d1_inc = 1'b0;
+        d1_clr = 1'b0;
+        d1_inc = 1'b0;
+        d1_clr = 1'b0;
         state_next = state_reg;
         ball_next = ball_reg;
         
         case(state_reg)
             newgame: begin
-                ball_next = 2'b11;          // three balls
-                d_clr = 1'b1;               // clear score
+                ball_next = 7'b1111111;          // 128 balls
+                d1_clr = 1'b1;               // clear score 1
+                d2_clr = 1'b1;               // clear score 2
                 
                 if(btn != 2'b00) begin      // button pressed
                     state_next = play;
@@ -128,19 +138,19 @@ module pong_top(
             play: begin
                 gra_still = 1'b0;   // animated screen
                 
-                if(hit)
-                    d_inc = 1'b1;   // increment score
-                
-                else if(miss) begin
-                    if(ball_reg == 0)
-                        state_next = over;
-                    
-                    else
-                        state_next = newball;
-                    
+                if(pts_1) begin
+                    d1_inc = 1'b1;   // increment score
+                    state_next = newball;
                     timer_start = 1'b1;     // 2 sec timer
                     ball_next = ball_reg - 1;
                 end
+                
+                else if(pts_2) begin
+                    d2_inc = 1'b1;   // increment score
+                    state_next = newball;
+                    timer_start = 1'b1;     // 2 sec timer
+                    ball_next = ball_reg - 1;
+                end           
             end
             
             newball: // wait for 2 sec and until button pressed
