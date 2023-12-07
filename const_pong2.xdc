@@ -4,14 +4,21 @@ set_property PACKAGE_PIN W5 [get_ports clk]
 	create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
  
  ##Buttons
-set_property PACKAGE_PIN T17 	 [get_ports reset]						
+##btnC
+set_property PACKAGE_PIN U18 	 [get_ports reset]						
 set_property IOSTANDARD LVCMOS33 [get_ports reset]
 ## btnU
 set_property PACKAGE_PIN T18 	 [get_ports btn[0]]						
 set_property IOSTANDARD LVCMOS33 [get_ports btn[0]]
-## btnD
-set_property PACKAGE_PIN U17 	 [get_ports btn[1]]						
+## btnL
+set_property PACKAGE_PIN W19 	 [get_ports btn[1]]						
 set_property IOSTANDARD LVCMOS33 [get_ports btn[1]]
+## btnR
+set_property PACKAGE_PIN T17 	 [get_ports btn[2]]						
+set_property IOSTANDARD LVCMOS33 [get_ports btn[2]]
+## btnD
+set_property PACKAGE_PIN U17 	 [get_ports btn[3]]						
+set_property IOSTANDARD LVCMOS33 [get_ports btn[3]]
 
 ##VGA Connector
 set_property PACKAGE_PIN G19     [get_ports {rgb[11]}]				
