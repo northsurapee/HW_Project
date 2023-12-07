@@ -55,6 +55,8 @@ module pong_top(
         .y(w_y),
         .dig0(dig0),
         .dig1(dig1),
+        .dig2(dig2),
+        .dig3(dig3),
         .ball(ball_reg),
         .text_on(text_on),
         .text_rgb(text_rgb));
@@ -101,13 +103,13 @@ module pong_top(
     always @(posedge clk or posedge reset)
         if(reset) begin
             state_reg <= newgame;
-            ball_reg <= 0;
+            ball_reg <= 0; // ? 
             rgb_reg <= 0;
         end
     
         else begin
             state_reg <= state_next;
-            ball_reg <= ball_next;
+            ball_reg <= ball_next; // ? 
             if(w_p_tick)
                 rgb_reg <= rgb_next;
         end
@@ -118,20 +120,20 @@ module pong_top(
         timer_start = 1'b0;
         d1_inc = 1'b0;
         d1_clr = 1'b0;
-        d1_inc = 1'b0;
-        d1_clr = 1'b0;
+        d2_inc = 1'b0;
+        d2_clr = 1'b0;
         state_next = state_reg;
-        ball_next = ball_reg;
+        ball_next = ball_reg; // ? 
         
         case(state_reg)
             newgame: begin
-                ball_next = 7'b1111111;          // 128 balls
+                ball_next = 7'b1111111;          // enough balls to play
                 d1_clr = 1'b1;               // clear score 1
                 d2_clr = 1'b1;               // clear score 2
                 
                 if(btn != 2'b00) begin      // button pressed
                     state_next = play;
-                    ball_next = ball_reg - 1;    
+                    ball_next = ball_reg - 1;   // ? 
                 end
             end
             
@@ -142,14 +144,14 @@ module pong_top(
                     d1_inc = 1'b1;   // increment score
                     state_next = newball;
                     timer_start = 1'b1;     // 2 sec timer
-                    ball_next = ball_reg - 1;
+                    ball_next = ball_reg - 1; // ? 
                 end
                 
                 else if(pts_2) begin
                     d2_inc = 1'b1;   // increment score
                     state_next = newball;
                     timer_start = 1'b1;     // 2 sec timer
-                    ball_next = ball_reg - 1;
+                    ball_next = ball_reg - 1; // ? 
                 end           
             end
             
@@ -157,7 +159,7 @@ module pong_top(
             if(timer_up && (btn != 2'b00))
                 state_next = play;
                 
-            over:   // wait 2 sec to display game over
+            over:   // wait 2 sec to display game over ---> NOT GONNA HAPPEN
                 if(timer_up)
                     state_next = newgame;
         endcase           
