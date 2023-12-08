@@ -85,8 +85,8 @@ module pong_graph(
     reg [9:0] x_delta_reg, x_delta_next;
     reg [9:0] y_delta_reg, y_delta_next;
     // positive or negative ball velocity
-    parameter BALL_VELOCITY_POS = 2;    // ball speed positive pixel direction(down, right)
-    parameter BALL_VELOCITY_NEG = -2;   // ball speed negative pixel direction(up, left)
+    parameter BALL_VELOCITY_POS = 1;    // ball speed positive pixel direction(down, right)
+    parameter BALL_VELOCITY_NEG = -1;   // ball speed negative pixel direction(up, left)
     // round ball from square image
     wire [2:0] rom_addr, rom_col;   // 3-bit rom address and rom column
     reg [7:0] rom_data;             // data at current rom address
@@ -236,15 +236,15 @@ module pong_graph(
 //                    hit = 1'b1; 
        
         // hit by paddle_1
-        else if((X_PAD1_L <= x_ball_r) && (x_ball_r <= X_PAD1_R) &&
+        else if((X_PAD1_L <= x_ball_l) && (x_ball_l <= X_PAD1_R) &&
                 (y_pad1_t <= y_ball_b) && (y_ball_t <= y_pad1_b)) begin
-                    x_delta_next = BALL_VELOCITY_NEG;  
-        end 
+                    x_delta_next = BALL_VELOCITY_POS;  
+        end  
         
         // hit by paddle_2
-        else if((X_PAD2_L <= x_ball_l) && (x_ball_l <= X_PAD2_R) &&
+        else if((X_PAD2_L <= x_ball_r) && (x_ball_r <= X_PAD2_R) &&
                 (y_pad2_t <= y_ball_b) && (y_ball_t <= y_pad2_b)) begin
-                    x_delta_next = BALL_VELOCITY_POS;              
+                    x_delta_next = BALL_VELOCITY_NEG;              
         end
         
         else if(x_ball_l > X_MAX) // 1 get point
