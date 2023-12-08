@@ -168,8 +168,7 @@ module pong_top(
     // rgb multiplexing
     always @*
         if(~w_vid_on)
-            rgb_next = 12'h000; // blank
-        
+            rgb_next = 12'h313; // blank        
         else
             if(text_on[3] || ((state_reg == newgame) && text_on[1]) || ((state_reg == over) && text_on[0]))
                 rgb_next = text_rgb;    // colors in pong_text
@@ -181,8 +180,7 @@ module pong_top(
                 rgb_next = text_rgb;    // colors in pong_text
                 
             else
-                rgb_next = 12'h000;     // black background
-    
+                rgb_next = 12'h313;     // aqua background    
     // output
     assign rgb = rgb_reg;
     
