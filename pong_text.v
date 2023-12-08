@@ -42,19 +42,19 @@ module pong_text(
    // - scale to 16 by 32 text size
    // - line 1, 16 chars: "Score: dd Ball: d"
    // ---------------------------------------------------------------------------
-   assign score_on = (y >= 32) && (y < 64) && (x[9:4] < 16);
+   assign score_on = (y >= 32) && (y < 64) && (8 <= x[9:4]) && (x[9:4] <= 22);
    //assign score_on = (y[9:5] == 0) && (x[9:4] < 16);
    assign row_addr_s = y[4:1];
    assign bit_addr_s = x[3:1];
    always @*
     case(x[7:4])
-        4'h0 : char_addr_s = {3'b011, dig3}; // tens digit 1
-        4'h1 : char_addr_s = {3'b011, dig2}; // ones digit 1
-        4'h2 : char_addr_s = 7'h3A; // :
-        4'h3 : char_addr_s = {3'b011, dig1}; // tens digit 2
-        4'h4 : char_addr_s = {3'b011, dig0}; // ones digit 2
-        4'h5 : char_addr_s = 7'h00;     //
-        4'h6 : char_addr_s = 7'h00;     //
+        4'h0 : char_addr_s = 7'h00;     //
+        4'h1 : char_addr_s = 7'h00;     //
+        4'h2 : char_addr_s = {3'b011, dig3}; // tens digit 1
+        4'h3 : char_addr_s = {3'b011, dig2}; // ones digit 1
+        4'h4 : char_addr_s = 7'h3A; // :
+        4'h5 : char_addr_s = {3'b011, dig1}; // tens digit 2
+        4'h6 : char_addr_s = {3'b011, dig0}; // ones digit 2
         4'h7 : char_addr_s = 7'h00;     //
         4'h8 : char_addr_s = 7'h00;     //
         4'h9 : char_addr_s = 7'h00;     //
