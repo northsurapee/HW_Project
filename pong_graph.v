@@ -18,7 +18,8 @@ module pong_graph(
     input [9:0] x,
     input [9:0] y,
     output graph_on,
-    output reg pts_1, pts_2,   // Add points to _
+    output reg pts_1,   // Add points to _
+    output reg pts_2,
     output reg [11:0] graph_rgb
     );
     
@@ -248,9 +249,9 @@ module pong_graph(
         end
         
         else if(x_ball_l > X_MAX) // 1 get point
-            pts_1 = 1'b1;    
-        else if(x_ball_r < 1) // 2 get pint
-            pts_2 = 1'b1;        
+            pts_1 = 1'b1;   
+        else if(x_ball_r < 9) // 2 get pint
+            pts_2 = 1'b1;       
     end                    
     
     // output status signal for graphics 
