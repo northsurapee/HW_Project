@@ -181,7 +181,7 @@ module pong_top(
                 rgb_next = text_rgb;    // colors in pong_text
                 
             else
-                rgb_next = 12'h0FF;     // aqua background
+                rgb_next = 12'h000;     // black background
     
     // output
     assign rgb = rgb_reg;
