@@ -146,7 +146,6 @@ module pong_graph(
     assign ball_rgb   = 12'h97A;    // red ball
     assign bg_rgb     = 12'h313;    // black background
     
-    
     // paddle_1
     assign y_pad1_t = y_pad1_reg;                             // paddle top position
     assign y_pad1_b = y_pad1_t + PAD1_HEIGHT - 1;              // paddle bottom position
