@@ -72,7 +72,7 @@ module pong_text(
     // - used as background
     // - scale to 64 by 128 text size
     // --------------------------------------------------------------------------
-    assign logo_on = (y[9:7] == 2) && (3 <= x[9:6]) && (x[9:6] <= 6);
+    assign logo_on = (x[9:7] == 2) && (y[9:6] == 2); // Don't need this
     assign row_addr_l = y[6:3];
     assign bit_addr_l = x[5:3];
     always @*
@@ -92,80 +92,82 @@ module pong_text(
     //          to move paddle
     //          up and down
     // --------------------------------------------------------------------------
-    assign rule_on = (x[9:7] == 2) && (y[9:6] == 2);
+//    assign rule_on = (x[9:7] == 2) && (y[9:6] == 2);
+//    assign rule_on = (y[9:7] == 2) && (3 <= x[9:6]) && (x[9:6] <= 6);
+    assign rule_on = (x[9:7] == 2) && (y[9:6] == 5);
     assign row_addr_r = y[3:0];
     assign bit_addr_r = x[2:0];
     assign rule_rom_addr = {y[5:4], x[6:3]};
     always @*
         case(rule_rom_addr)
             // row 1
-            6'h00 : char_addr_r = 7'h52;    // R
-            6'h01 : char_addr_r = 7'h55;    // U
-            6'h02 : char_addr_r = 7'h4c;    // L
-            6'h03 : char_addr_r = 7'h45;    // E
-            6'h04 : char_addr_r = 7'h3A;    // :
-            6'h05 : char_addr_r = 7'h00;    //
-            6'h06 : char_addr_r = 7'h00;    //
-            6'h07 : char_addr_r = 7'h00;    //
-            6'h08 : char_addr_r = 7'h00;    //
-            6'h09 : char_addr_r = 7'h00;    //
-            6'h0A : char_addr_r = 7'h00;    //
-            6'h0B : char_addr_r = 7'h00;    //
-            6'h0C : char_addr_r = 7'h00;    //
-            6'h0D : char_addr_r = 7'h00;    //
+            6'h00 : char_addr_r = 7'h00;    // 
+            6'h01 : char_addr_r = 7'h00;    // 
+            6'h02 : char_addr_r = 7'h3C;    // <
+            6'h03 : char_addr_r = 7'h00;    // 
+            6'h04 : char_addr_r = 7'h43;    // C
+            6'h05 : char_addr_r = 7'h50;    // P
+            6'h06 : char_addr_r = 7'h00;    // 
+            6'h07 : char_addr_r = 7'h50;    // P
+            6'h08 : char_addr_r = 7'h4F;    // O
+            6'h09 : char_addr_r = 7'h4E;    // N
+            6'h0A : char_addr_r = 7'h47;    // G
+            6'h0B : char_addr_r = 7'h21;    // !
+            6'h0C : char_addr_r = 7'h00;    // 
+            6'h0D : char_addr_r = 7'h3E;    // >
             6'h0E : char_addr_r = 7'h00;    //
             6'h0F : char_addr_r = 7'h00;    //
             // row 2
-            6'h10 : char_addr_r = 7'h55;    // U
-            6'h11 : char_addr_r = 7'h53;    // S
-            6'h12 : char_addr_r = 7'h45;    // E
-            6'h13 : char_addr_r = 7'h00;    // 
-            6'h14 : char_addr_r = 7'h54;    // T
-            6'h15 : char_addr_r = 7'h57;    // W
-            6'h16 : char_addr_r = 7'h4F;    // O
-            6'h17 : char_addr_r = 7'h00;    //
-            6'h18 : char_addr_r = 7'h42;    // B
-            6'h19 : char_addr_r = 7'h55;    // U
-            6'h1A : char_addr_r = 7'h54;    // T
-            6'h1B : char_addr_r = 7'h54;    // T
-            6'h1C : char_addr_r = 7'h4F;    // O
-            6'h1D : char_addr_r = 7'h4E;    // N
-            6'h1E : char_addr_r = 7'h53;    // S
+            6'h10 : char_addr_r = 7'h00;    // 
+            6'h11 : char_addr_r = 7'h00;    //
+            6'h12 : char_addr_r = 7'h00;    //
+            6'h13 : char_addr_r = 7'h57;    // W
+            6'h14 : char_addr_r = 7'h2D;    // -
+            6'h15 : char_addr_r = 7'h53;    // S
+            6'h16 : char_addr_r = 7'h00;    // 
+            6'h17 : char_addr_r = 7'h46;    // F
+            6'h18 : char_addr_r = 7'h4F;    // O
+            6'h19 : char_addr_r = 7'h52;    // R
+            6'h1A : char_addr_r = 7'h00;    //
+            6'h1B : char_addr_r = 7'h50;    // P
+            6'h1C : char_addr_r = 7'h31;    // 1 
+            6'h1D : char_addr_r = 7'h00;    // 
+            6'h1E : char_addr_r = 7'h00;    // 
             6'h1F : char_addr_r = 7'h00;    //
             // row 3
-            6'h20 : char_addr_r = 7'h54;    // T
-            6'h21 : char_addr_r = 7'h4F;    // O
-            6'h22 : char_addr_r = 7'h00;    // 
-            6'h23 : char_addr_r = 7'h4D;    // M
-            6'h24 : char_addr_r = 7'h4F;    // O
-            6'h25 : char_addr_r = 7'h56;    // V
-            6'h26 : char_addr_r = 7'h45;    // E
-            6'h27 : char_addr_r = 7'h00;    //
-            6'h28 : char_addr_r = 7'h50;    // P
-            6'h29 : char_addr_r = 7'h41;    // A
-            6'h2A : char_addr_r = 7'h44;    // D
-            6'h2B : char_addr_r = 7'h44;    // D
-            6'h2C : char_addr_r = 7'h4C;    // L
-            6'h2D : char_addr_r = 7'h45;    // E
+            6'h20 : char_addr_r = 7'h00;    // 
+            6'h21 : char_addr_r = 7'h00;    //
+            6'h22 : char_addr_r = 7'h00;    //
+            6'h23 : char_addr_r = 7'h57;    // W
+            6'h24 : char_addr_r = 7'h2D;    // -
+            6'h25 : char_addr_r = 7'h53;    // S
+            6'h26 : char_addr_r = 7'h00;    // 
+            6'h27 : char_addr_r = 7'h46;    // F
+            6'h28 : char_addr_r = 7'h4F;    // O
+            6'h29 : char_addr_r = 7'h52;    // R
+            6'h2A : char_addr_r = 7'h00;    //
+            6'h2B : char_addr_r = 7'h50;    // P
+            6'h2C : char_addr_r = 7'h32;    // 2 
+            6'h2D : char_addr_r = 7'h00;    // 
             6'h2E : char_addr_r = 7'h00;    // 
             6'h2F : char_addr_r = 7'h00;    //
             // row 4
-            6'h30 : char_addr_r = 7'h55;    // U
+            6'h30 : char_addr_r = 7'h7C;    // |
             6'h31 : char_addr_r = 7'h50;    // P
-            6'h32 : char_addr_r = 7'h00;    // 
-            6'h33 : char_addr_r = 7'h41;    // A
-            6'h34 : char_addr_r = 7'h4E;    // N
-            6'h35 : char_addr_r = 7'h44;    // D
+            6'h32 : char_addr_r = 7'h52;    // R
+            6'h33 : char_addr_r = 7'h45;    // E
+            6'h34 : char_addr_r = 7'h53;    // S
+            6'h35 : char_addr_r = 7'h53;    // S
             6'h36 : char_addr_r = 7'h00;    // 
-            6'h37 : char_addr_r = 7'h44;    // D
+            6'h37 : char_addr_r = 7'h54;    // T
             6'h38 : char_addr_r = 7'h4F;    // O
-            6'h39 : char_addr_r = 7'h57;    // W
-            6'h3A : char_addr_r = 7'h4E;    // N
-            6'h3B : char_addr_r = 7'h2E;    // 
-            6'h3C : char_addr_r = 7'h00;    // 
-            6'h3D : char_addr_r = 7'h00;    // 
-            6'h3E : char_addr_r = 7'h00;    // 
-            6'h3F : char_addr_r = 7'h00;    //
+            6'h39 : char_addr_r = 7'h00;    // 
+            6'h3A : char_addr_r = 7'h53;    // S
+            6'h3B : char_addr_r = 7'h54;    // T
+            6'h3C : char_addr_r = 7'h41;    // A
+            6'h3D : char_addr_r = 7'h52;    // R
+            6'h3E : char_addr_r = 7'h54;    // T
+            6'h3F : char_addr_r = 7'h7C;    // |
         endcase
     // --------------------------------------------------------------------------
     // game over region
@@ -190,14 +192,14 @@ module pong_text(
     
     // mux for ascii ROM addresses and rgb
     always @* begin
-        text_rgb = 12'h000;     // aqua background
+        text_rgb = 12'hFFF;     // aqua background
         
         if(score_on) begin
             char_addr = char_addr_s;
             row_addr = row_addr_s;
             bit_addr = bit_addr_s;
             if(ascii_bit)
-                text_rgb = 12'hFFF; // red
+                text_rgb = 12'h000; // red
         end
         
         else if(rule_on) begin
@@ -205,16 +207,16 @@ module pong_text(
             row_addr = row_addr_r;
             bit_addr = bit_addr_r;
             if(ascii_bit)
-                text_rgb = 12'hFFF; // red
+                text_rgb = 12'h000; // red
         end
         
-        else if(logo_on) begin
-            char_addr = char_addr_l;
-            row_addr = row_addr_l;
-            bit_addr = bit_addr_l;
-            if(ascii_bit)
-                text_rgb = 12'hFFF; // yellow
-        end
+//        else if(logo_on) begin
+//            char_addr = char_addr_l;
+//            row_addr = row_addr_l;
+//            bit_addr = bit_addr_l;
+//            if(ascii_bit)
+//                text_rgb = 12'hFFF; // yellow
+//        end
         
 //        else begin // game over --> NOT GONNA HAPPEN
 //            char_addr = char_addr_o;
@@ -232,4 +234,3 @@ module pong_text(
     assign ascii_bit = ascii_word[~bit_addr];
       
 endmodule
-

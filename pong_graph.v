@@ -48,7 +48,7 @@ module pong_graph(
     // PADDLE_1
     // paddle horizontal boundaries
     parameter X_PAD1_L = 37;
-    parameter X_PAD1_R = 40;    // 4 pixels wide
+    parameter X_PAD1_R = 46;    // 4 pixels wide
     // paddle vertical boundary signals
     wire [9:0] y_pad1_t, y_pad1_b;
     parameter PAD1_HEIGHT = 72;  // 72 pixels high
@@ -56,11 +56,11 @@ module pong_graph(
     reg [9:0] y_pad1_reg = 204;      // Paddle starting position
     reg [9:0] y_pad1_next;
     // paddle moving velocity when a button is pressed
-    parameter PAD1_VELOCITY = 3;     // change to speed up or slow down paddle movement
+    parameter PAD1_VELOCITY = 2;     // change to speed up or slow down paddle movement
     
     // PADDLE_2
     // paddle horizontal boundaries
-    parameter X_PAD2_L = 600;
+    parameter X_PAD2_L = 594;
     parameter X_PAD2_R = 603;    // 4 pixels wide
     // paddle vertical boundary signals
     wire [9:0] y_pad2_t, y_pad2_b;
@@ -69,11 +69,11 @@ module pong_graph(
     reg [9:0] y_pad2_reg = 204;      // Paddle starting position
     reg [9:0] y_pad2_next;
     // paddle moving velocity when a button is pressed
-    parameter PAD2_VELOCITY = 3;     // change to speed up or slow down paddle movement
+    parameter PAD2_VELOCITY = 2;     // change to speed up or slow down paddle movement
     
     // BALL
     // square rom boundaries
-    parameter BALL_SIZE = 8;
+    parameter BALL_SIZE = 8; //8
     // ball horizontal boundary signals
     wire [9:0] x_ball_l, x_ball_r;
     // ball vertical boundary signals
@@ -119,10 +119,10 @@ module pong_graph(
         case(rom_addr)
             3'b000 :    rom_data = 8'b00111100; //   ****  
             3'b001 :    rom_data = 8'b01111110; //  ******
-            3'b010 :    rom_data = 8'b11111111; // ********
+            3'b010 :    rom_data = 8'b01111110; // ********
             3'b011 :    rom_data = 8'b11111111; // ********
             3'b100 :    rom_data = 8'b11111111; // ********
-            3'b101 :    rom_data = 8'b11111111; // ********
+            3'b101 :    rom_data = 8'b01111110; // ********
             3'b110 :    rom_data = 8'b01111110; //  ******
             3'b111 :    rom_data = 8'b00111100; //   ****
         endcase
@@ -140,11 +140,11 @@ module pong_graph(
     
     
     // assign object colors
-    assign wall_rgb   = 12'h425;    // blue walls
-    assign pad1_rgb    = 12'h636;    // blue paddle
-    assign pad2_rgb    = 12'h636;    // green paddle
-    assign ball_rgb   = 12'h97A;    // red ball
-    assign bg_rgb     = 12'h313;    // black background
+    assign wall_rgb   = 12'hFFF;    // blue walls
+    assign pad1_rgb    = 12'h000;    // blue paddle
+    assign pad2_rgb    = 12'h000;    // green paddle
+    assign ball_rgb   = 12'h000;    // red ball
+    assign bg_rgb     = 12'hFFF;    // black background
     
     // paddle_1
     assign y_pad1_t = y_pad1_reg;                             // paddle top position
@@ -256,11 +256,10 @@ module pong_graph(
     // output status signal for graphics 
     assign graph_on = t_wall_on | b_wall_on | pad1_on | pad2_on | ball_on;
     
-    
     // rgb multiplexing circuit
     always @*
         if(~video_on)
-            graph_rgb = 12'h000;      // no value, blank
+            graph_rgb = 12'hFFF;      // no value, blank
         else
             if(t_wall_on | b_wall_on)
                 graph_rgb = wall_rgb;     // wall color
