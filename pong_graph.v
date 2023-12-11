@@ -156,10 +156,10 @@ module pong_graph(
         case(rom_addr)
             3'b000 :    rom_data = 8'b00111100; //   ****  
             3'b001 :    rom_data = 8'b01111110; //  ******
-            3'b010 :    rom_data = 8'b01111110; // ********
+            3'b010 :    rom_data = 8'b01111110; //  ******
             3'b011 :    rom_data = 8'b11111111; // ********
             3'b100 :    rom_data = 8'b11111111; // ********
-            3'b101 :    rom_data = 8'b01111110; // ********
+            3'b101 :    rom_data = 8'b01111110; //  ******
             3'b110 :    rom_data = 8'b01111110; //  ******
             3'b111 :    rom_data = 8'b00111100; //   ****
         endcase
@@ -250,8 +250,7 @@ module pong_graph(
         y_delta_next = y_delta_reg;
         
         if(gra_still) begin
-            x_delta_next = BALL_VELOCITY_NEG;
-            y_delta_next = BALL_VELOCITY_POS;
+
         end
         
         else if(y_ball_t < T_WALL_B)                   // reach top
@@ -285,10 +284,16 @@ module pong_graph(
                     x_delta_next = BALL_VELOCITY_NEG;              
         end
         
-        else if(x_ball_l > X_MAX) // 1 get point
-            pts_1 = 1'b1;   
-        else if(x_ball_r < 9) // 2 get pint
-            pts_2 = 1'b1;       
+        else if(x_ball_l > X_MAX) begin // 1 get point
+            pts_1 = 1'b1;  
+            x_delta_next = BALL_VELOCITY_POS;
+            y_delta_next = BALL_VELOCITY_POS; 
+        end
+        else if(x_ball_r < 9) begin // 2 get pint
+            pts_2 = 1'b1;   
+            x_delta_next = BALL_VELOCITY_NEG;
+            y_delta_next = BALL_VELOCITY_POS;   
+        end      
     end                    
     
     // output status signal for graphics 
