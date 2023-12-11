@@ -138,9 +138,9 @@ module pong_text(
             6'h20 : char_addr_r = 7'h00;    // 
             6'h21 : char_addr_r = 7'h00;    //
             6'h22 : char_addr_r = 7'h00;    //
-            6'h23 : char_addr_r = 7'h57;    // W
+            6'h23 : char_addr_r = 7'h29;    // W
             6'h24 : char_addr_r = 7'h2D;    // -
-            6'h25 : char_addr_r = 7'h53;    // S
+            6'h25 : char_addr_r = 7'h2A;    // S
             6'h26 : char_addr_r = 7'h00;    // 
             6'h27 : char_addr_r = 7'h46;    // F
             6'h28 : char_addr_r = 7'h4F;    // O

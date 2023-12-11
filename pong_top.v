@@ -8,7 +8,6 @@
 // Adapted for Basys 3 by David J. Marion aka FPGA Dude
 //
 //////////////////////////////////////////////////////////////////////////////////
-// Hello my friends
 module pong_top(
     input clk,              // 100MHz
     input reset,            // btnR
