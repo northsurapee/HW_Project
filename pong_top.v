@@ -8,15 +8,80 @@
 // Adapted for Basys 3 by David J. Marion aka FPGA Dude
 //
 //////////////////////////////////////////////////////////////////////////////////
-
+// Hello my friends
 module pong_top(
     input clk,              // 100MHz
     input reset,            // btnR
     input [3:0] btn,        // btnU, btnL, btnR, btnD
+    input  PS2Data,
+    input  PS2Clk,
     output hsync,           // to VGA Connector
     output vsync,           // to VGA Connector
-    output [11:0] rgb       // to DAC, to VGA Connector
+    output [11:0] rgb,       // to DAC, to VGA Connector
+    output wire RsTx, //uart
+    input wire RsRx //uart
+//    output wire led_up1,
+//    output wire led_down1
     );
+    
+    //new todddddddddddddddd
+    reg en, last_rec;
+    reg [7:0] data_in;
+    wire [7:0] data_out;
+    wire sent, received, baud;
+    reg key_up1, key_down1, key_up2, key_down2;
+    wire btnW, btnS, btnP, btnL;
+    
+    baudrate_gen baudrate_gen(clk, baud);
+    uart_rx receiver(baud, RsRx, received, data_out);
+    uart_tx transmitter(baud, data_in, en, sent, RsTx);
+    
+    always @(posedge baud) begin
+        if (key_up1) key_up1 = 0;
+        if (key_down1) key_down1 = 0;
+        if (key_up2) key_up2 = 0;
+        if (key_down2) key_down2 = 0;
+
+        if (en) en = 0;
+//        if (~last_rec & received) begin //del
+            data_in = data_out;
+//             + 8'h01;
+            if (data_in <= 8'h7A && data_in >= 8'h3A) en = 1;
+            if (data_in == 8'h77) begin
+                key_up1 = 1;
+                key_down1 = 0;
+            end
+            else if (data_in == 8'h73) begin 
+                key_down1 = 1;
+                key_up1 = 0;
+            end
+            else begin
+                key_up1 = 0;
+                key_down1 = 0;
+            end
+            
+            
+            if (data_in == 8'h70) begin
+                key_up2 = 1;
+                key_down2 = 0;
+            end
+            else if (data_in == 8'h6c) begin 
+                key_down2 = 1;
+                key_up2 = 0;
+            end
+            else begin
+                key_up2 = 0;
+                key_down2 = 0;
+            end
+//        end //del
+        last_rec = received;
+    end
+    
+    debounce dbW(.clk(clk),.btn_in(key_up1),.btn_out(btnW));
+    debounce dbS(.clk(clk),.btn_in(key_down1),.btn_out(btnS));
+    debounce dbP(.clk(clk),.btn_in(key_up2),.btn_out(btnP));
+    debounce dbL(.clk(clk),.btn_in(key_down2),.btn_out(btnL));
+    //new todddddddddddddddd
     
     // state declarations for 4 states
     parameter newgame = 2'b00;
@@ -69,11 +134,23 @@ module pong_top(
         .video_on(w_vid_on),
         .x(w_x),
         .y(w_y),
+        .PS2Data(PS2Data),
+        .PS2Clk(PS2Clk),
         .pts_1(pts_1),
         .pts_2(pts_2),
         .graph_on(graph_on),
-        .graph_rgb(graph_rgb));
-    
+        .graph_rgb(graph_rgb),
+        .RsTx(RsTx), //uart
+        .RsRx(RsRx), //uart
+        .btnW(btnW),
+        .btnS(btnS),
+        .btnP(btnP),
+        .btnL(btnL)
+        );
+//new todddddddddddddddd
+//    debounce(.clk(clk),.btn_in(key_up1),.btn_out(btnW));
+//    debounce(.clk(clk),.btn_in(key_down1),.btn_out(btnS));
+//new todddddddddddddddd  
     // 60 Hz tick when screen is refreshed
     assign timer_tick = (w_x == 0) && (w_y == 0);
     timer timer_unit(
@@ -131,7 +208,7 @@ module pong_top(
                 d1_clr = 1'b1;               // clear score 1
                 d2_clr = 1'b1;               // clear score 2
                 
-                if(btn != 2'b00) begin      // button pressed
+                if(key_up1 != 1'b0 || key_up2 != 1'b0 || key_down1 != 1'b0 || key_down2 != 1'b0) begin      // button pressed
                     state_next = play;
                     ball_next = ball_reg - 1;   // ? 
                 end
@@ -156,7 +233,7 @@ module pong_top(
             end
             
             newball: // wait for 2 sec and until button pressed
-            if(timer_up && (btn != 2'b00))
+            if(timer_up && (key_up1 != 1'b0 || key_up2 != 1'b0 || key_down1 != 1'b0 || key_down2 != 1'b0))
                 state_next = play;
                 
             over:   // wait 2 sec to display game over ---> NOT GONNA HAPPEN
@@ -168,8 +245,7 @@ module pong_top(
     // rgb multiplexing
     always @*
         if(~w_vid_on)
-            rgb_next = 12'h000; // blank
-        
+            rgb_next = 12'h000; // blank        
         else
             if(text_on[3] || ((state_reg == newgame) && text_on[1]) || ((state_reg == over) && text_on[0]))
                 rgb_next = text_rgb;    // colors in pong_text
@@ -181,8 +257,7 @@ module pong_top(
                 rgb_next = text_rgb;    // colors in pong_text
                 
             else
-                rgb_next = 12'h000;     // black background
-    
+                rgb_next = 12'hFFF;     // aqua background    
     // output
     assign rgb = rgb_reg;
     

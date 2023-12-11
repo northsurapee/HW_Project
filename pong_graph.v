@@ -17,12 +17,49 @@ module pong_graph(
     input video_on,
     input [9:0] x,
     input [9:0] y,
+    input  PS2Data,
+    input  PS2Clk,
     output graph_on,
     output reg pts_1,   // Add points to _
     output reg pts_2,
-    output reg [11:0] graph_rgb
+    output reg [11:0] graph_rgb,
+    output wire RsTx, //uart
+    input wire RsRx, //uart
+    input btnW,
+    input btnS,
+    input btnP,
+    input btnL
     );
     
+    wire uppad1;
+    wire downpad1;
+    wire uppad2;
+    wire downpad2;
+
+
+//    wire key_up1;
+//    wire key_down1;
+    
+    KeyboardController kb (
+        .clk(clk),
+        .PS2Data(PS2Data),
+        .PS2Clk(PS2Clk),
+        .uppad1(uppad1),
+        .downpad1(downpad1),
+        .uppad2(uppad2),
+        .downpad2(downpad2)
+    );
+    
+//    uart ua (
+//    .clk(clk),
+//    .RsRx(RsRx),
+//    .RsTx(RsTx),
+//    .led_up1(led_up1),
+//    .led_down1(led_down1),
+//    .key_up1(key_up1),
+//    .key_down1(key_down1)
+//    );
+        
     // maximum x, y values in display area
     parameter X_MAX = 639;
     parameter Y_MAX = 479;
@@ -48,7 +85,7 @@ module pong_graph(
     // PADDLE_1
     // paddle horizontal boundaries
     parameter X_PAD1_L = 37;
-    parameter X_PAD1_R = 40;    // 4 pixels wide
+    parameter X_PAD1_R = 46;    // 4 pixels wide
     // paddle vertical boundary signals
     wire [9:0] y_pad1_t, y_pad1_b;
     parameter PAD1_HEIGHT = 72;  // 72 pixels high
@@ -56,11 +93,11 @@ module pong_graph(
     reg [9:0] y_pad1_reg = 204;      // Paddle starting position
     reg [9:0] y_pad1_next;
     // paddle moving velocity when a button is pressed
-    parameter PAD1_VELOCITY = 3;     // change to speed up or slow down paddle movement
+    parameter PAD1_VELOCITY = 2;     // change to speed up or slow down paddle movement
     
     // PADDLE_2
     // paddle horizontal boundaries
-    parameter X_PAD2_L = 600;
+    parameter X_PAD2_L = 594;
     parameter X_PAD2_R = 603;    // 4 pixels wide
     // paddle vertical boundary signals
     wire [9:0] y_pad2_t, y_pad2_b;
@@ -69,11 +106,11 @@ module pong_graph(
     reg [9:0] y_pad2_reg = 204;      // Paddle starting position
     reg [9:0] y_pad2_next;
     // paddle moving velocity when a button is pressed
-    parameter PAD2_VELOCITY = 3;     // change to speed up or slow down paddle movement
+    parameter PAD2_VELOCITY = 2;     // change to speed up or slow down paddle movement
     
     // BALL
     // square rom boundaries
-    parameter BALL_SIZE = 8;
+    parameter BALL_SIZE = 8; //8
     // ball horizontal boundary signals
     wire [9:0] x_ball_l, x_ball_r;
     // ball vertical boundary signals
@@ -101,8 +138,8 @@ module pong_graph(
             y_pad2_reg <= 204;
             x_ball_reg <= 0;
             y_ball_reg <= 0;
-            x_delta_reg <= 10'h002;
-            y_delta_reg <= 10'h002;
+            x_delta_reg <= -10'h001;
+            y_delta_reg <= 10'h001;
         end
         else begin
             y_pad1_reg <= y_pad1_next;
@@ -119,10 +156,10 @@ module pong_graph(
         case(rom_addr)
             3'b000 :    rom_data = 8'b00111100; //   ****  
             3'b001 :    rom_data = 8'b01111110; //  ******
-            3'b010 :    rom_data = 8'b11111111; // ********
+            3'b010 :    rom_data = 8'b01111110; // ********
             3'b011 :    rom_data = 8'b11111111; // ********
             3'b100 :    rom_data = 8'b11111111; // ********
-            3'b101 :    rom_data = 8'b11111111; // ********
+            3'b101 :    rom_data = 8'b01111110; // ********
             3'b110 :    rom_data = 8'b01111110; //  ******
             3'b111 :    rom_data = 8'b00111100; //   ****
         endcase
@@ -140,12 +177,11 @@ module pong_graph(
     
     
     // assign object colors
-    assign wall_rgb   = 12'h00F;    // blue walls
-    assign pad1_rgb    = 12'h00F;    // blue paddle
-    assign pad2_rgb    = 12'h0F0;    // green paddle
-    assign ball_rgb   = 12'hF00;    // red ball
-    assign bg_rgb     = 12'h0FF;    // aqua background
-    
+    assign wall_rgb   = 12'hFFF;    // blue walls
+    assign pad1_rgb    = 12'h000;    // blue paddle
+    assign pad2_rgb    = 12'h000;    // green paddle
+    assign ball_rgb   = 12'h000;    // red ball
+    assign bg_rgb     = 12'hFFF;    // black background
     
     // paddle_1
     assign y_pad1_t = y_pad1_reg;                             // paddle top position
@@ -165,9 +201,10 @@ module pong_graph(
         y_pad1_next = y_pad1_reg;     // no move
         
         if(refresh_tick)
-            if(btn[1] & (y_pad1_b < (B_WALL_T - 1 - PAD1_VELOCITY)))
+            if((btnS) & (y_pad1_b < (B_WALL_T - 1 - PAD1_VELOCITY))) begin
                 y_pad1_next = y_pad1_reg + PAD1_VELOCITY;  // move down
-            else if(btn[0] & (y_pad1_t > (T_WALL_B - 1 - PAD1_VELOCITY)))
+            end
+            else if((btnW) & (y_pad1_t > (T_WALL_B - 1 - PAD1_VELOCITY)))
                 y_pad1_next = y_pad1_reg - PAD1_VELOCITY;  // move up
     end
     
@@ -176,9 +213,9 @@ module pong_graph(
         y_pad2_next = y_pad2_reg;     // no move
         
         if(refresh_tick)
-            if(btn[3] & (y_pad2_b < (B_WALL_T - 1 - PAD2_VELOCITY)))
+            if((btnL) & (y_pad2_b < (B_WALL_T - 1 - PAD2_VELOCITY)))
                 y_pad2_next = y_pad2_reg + PAD2_VELOCITY;  // move down
-            else if(btn[2] & (y_pad2_t > (T_WALL_B - 1 - PAD2_VELOCITY)))
+            else if((btnP) & (y_pad2_t > (T_WALL_B - 1 - PAD2_VELOCITY)))
                 y_pad2_next = y_pad2_reg - PAD2_VELOCITY;  // move up
     end
     
@@ -257,11 +294,10 @@ module pong_graph(
     // output status signal for graphics 
     assign graph_on = t_wall_on | b_wall_on | pad1_on | pad2_on | ball_on;
     
-    
     // rgb multiplexing circuit
     always @*
         if(~video_on)
-            graph_rgb = 12'h000;      // no value, blank
+            graph_rgb = 12'hFFF;      // no value, blank
         else
             if(t_wall_on | b_wall_on)
                 graph_rgb = wall_rgb;     // wall color
