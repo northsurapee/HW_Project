@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module pong_text(
+module text_output(
     input clk,
     input [6:0] ball, // no need anymore
     input [3:0] dig0,

@@ -8,7 +8,7 @@
 // Adapted for Basys 3 by David J. Marion aka FPGA Dude
 //
 //////////////////////////////////////////////////////////////////////////////////
-module pong_top(
+module state_machine(
     input clk,              // 100MHz
     input reset,            // btnR
     input [3:0] btn,        // btnU, btnL, btnR, btnD
@@ -38,7 +38,7 @@ module pong_top(
     
     
     // Module Instantiations
-    vga_controller vga_unit(
+    vga_controller vga_controller(
         .clk_100MHz(clk),
         .reset(reset),
         .video_on(w_vid_on),
@@ -48,7 +48,7 @@ module pong_top(
         .x(w_x),
         .y(w_y));
     
-    pong_text text_unit(
+    text_output text_output(
         .clk(clk),
         .x(w_x),
         .y(w_y),
@@ -60,7 +60,7 @@ module pong_top(
         .text_on(text_on),
         .text_rgb(text_rgb));
         
-    pong_graph graph_unit(
+    graphic_output graphic_output(
         .clk(clk),
         .reset(reset),
         .btn(btn),
@@ -75,14 +75,14 @@ module pong_top(
     
     // 60 Hz tick when screen is refreshed
     assign timer_tick = (w_x == 0) && (w_y == 0);
-    timer timer_unit(
+    timer timer(
         .clk(clk),
         .reset(reset),
         .timer_tick(timer_tick),
         .timer_start(timer_start),
         .timer_up(timer_up));
     
-    m100_counter counter_unit_1(
+    score_counter score_counter_player1(
         .clk(clk),
         .reset(reset),
         .d_inc(d1_inc),
@@ -90,7 +90,7 @@ module pong_top(
         .dig0(dig2),
         .dig1(dig3));
         
-    m100_counter counter_unit_2(
+    score_counter score_counter_player_2(
         .clk(clk),
         .reset(reset),
         .d_inc(d2_inc),

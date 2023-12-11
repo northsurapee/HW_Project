@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module pong_graph(
+module graphic_output(
     input clk,  
     input reset,    
     input [3:0] btn,        // btn[0] = 1up, btn[1] = 1down, btn[2] = 2up, btn[3] = 2down

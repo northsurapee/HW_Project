@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module m100_counter(
+module score_counter(
     input clk,
     input reset,
     input d_inc, d_clr,
