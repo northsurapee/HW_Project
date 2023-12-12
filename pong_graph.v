@@ -201,10 +201,10 @@ module pong_graph(
         y_pad1_next = y_pad1_reg;     // no move
         
         if(refresh_tick)
-            if((btnS) & (y_pad1_b < (B_WALL_T - 1 - PAD1_VELOCITY))) begin
+            if((downpad1) & (y_pad1_b < (B_WALL_T - 1 - PAD1_VELOCITY))) begin
                 y_pad1_next = y_pad1_reg + PAD1_VELOCITY;  // move down
             end
-            else if((btnW) & (y_pad1_t > (T_WALL_B - 1 - PAD1_VELOCITY)))
+            else if((uppad1) & (y_pad1_t > (T_WALL_B - 1 - PAD1_VELOCITY)))
                 y_pad1_next = y_pad1_reg - PAD1_VELOCITY;  // move up
     end
     
@@ -213,9 +213,9 @@ module pong_graph(
         y_pad2_next = y_pad2_reg;     // no move
         
         if(refresh_tick)
-            if((btnL) & (y_pad2_b < (B_WALL_T - 1 - PAD2_VELOCITY)))
+            if((downpad2) & (y_pad2_b < (B_WALL_T - 1 - PAD2_VELOCITY)))
                 y_pad2_next = y_pad2_reg + PAD2_VELOCITY;  // move down
-            else if((btnP) & (y_pad2_t > (T_WALL_B - 1 - PAD2_VELOCITY)))
+            else if((uppad2) & (y_pad2_t > (T_WALL_B - 1 - PAD2_VELOCITY)))
                 y_pad2_next = y_pad2_reg - PAD2_VELOCITY;  // move up
     end
     
