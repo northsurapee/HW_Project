@@ -28,27 +28,28 @@ module pong_graph(
     input btnW,
     input btnS,
     input btnP,
-    input btnL
+    input btnL,
+    input uppad1,
+    input downpad1,
+    input uppad2,
+    input downpad2
     );
     
-    wire uppad1;
-    wire downpad1;
-    wire uppad2;
-    wire downpad2;
+//    wire uppad1;
+//    wire downpad1;
+//    wire uppad2;
+//    wire downpad2;
 
-
-//    wire key_up1;
-//    wire key_down1;
     
-    KeyboardController kb (
-        .clk(clk),
-        .PS2Data(PS2Data),
-        .PS2Clk(PS2Clk),
-        .uppad1(uppad1),
-        .downpad1(downpad1),
-        .uppad2(uppad2),
-        .downpad2(downpad2)
-    );
+//    KeyboardController kb (
+//        .clk(clk),
+//        .PS2Data(PS2Data),
+//        .PS2Clk(PS2Clk),
+//        .uppad1(uppad1),
+//        .downpad1(downpad1),
+//        .uppad2(uppad2),
+//        .downpad2(downpad2)
+//    );
     
 //    uart ua (
 //    .clk(clk),

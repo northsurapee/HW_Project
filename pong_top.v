@@ -24,6 +24,24 @@ module pong_top(
 //    output wire led_down1
     );
     
+    // todddddddddddddddddddddddddddddddddddd2
+    wire uppad1;
+    wire downpad1;
+    wire uppad2;
+    wire downpad2;
+
+    
+    KeyboardController kb (
+        .clk(clk),
+        .PS2Data(PS2Data),
+        .PS2Clk(PS2Clk),
+        .uppad1(uppad1),
+        .downpad1(downpad1),
+        .uppad2(uppad2),
+        .downpad2(downpad2)
+    );
+    // todddddddddddddddddddddddddddddddddddd2
+    
     //new todddddddddddddddd
     reg en, last_rec;
     reg [7:0] data_in;
@@ -145,7 +163,11 @@ module pong_top(
         .btnW(btnW),
         .btnS(btnS),
         .btnP(btnP),
-        .btnL(btnL)
+        .btnL(btnL),
+        .uppad1(uppad1),
+        .downpad1(downpad1),
+        .uppad2(uppad2),
+        .downpad2(downpad2)
         );
 //new todddddddddddddddd
 //    debounce(.clk(clk),.btn_in(key_up1),.btn_out(btnW));
@@ -208,7 +230,7 @@ module pong_top(
                 d1_clr = 1'b1;               // clear score 1
                 d2_clr = 1'b1;               // clear score 2
                 
-                if(key_up1 != 1'b0 || key_up2 != 1'b0 || key_down1 != 1'b0 || key_down2 != 1'b0) begin      // button pressed
+                if(uppad1 != 1'b0 || uppad2 != 1'b0 || downpad1 != 1'b0 || downpad2 != 1'b0) begin      // button pressed
                     state_next = play;
                     ball_next = ball_reg - 1;   // ? 
                 end
@@ -233,7 +255,7 @@ module pong_top(
             end
             
             newball: // wait for 2 sec and until button pressed
-            if(timer_up && (key_up1 != 1'b0 || key_up2 != 1'b0 || key_down1 != 1'b0 || key_down2 != 1'b0))
+            if(timer_up && (uppad1 != 1'b0 || uppad2 != 1'b0 || downpad1 != 1'b0 || downpad2 != 1'b0))
                 state_next = play;
                 
             over:   // wait 2 sec to display game over ---> NOT GONNA HAPPEN

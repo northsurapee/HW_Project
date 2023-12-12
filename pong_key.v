@@ -63,9 +63,9 @@ module KeyboardController (
         else if (keycode[7:0] == 8'h75)
             uppad2 = 1'b1;
             
-        if(keycode == 16'hF073) // keyDown
+        if(keycode == 16'hF072) // keyDown
             downpad2 = 1'b0;
-        else if (keycode[7:0] == 8'h73)
+        else if (keycode[7:0] == 8'h72)
             downpad2 = 1'b1;
     end
   end
