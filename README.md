@@ -1,5 +1,7 @@
 # HW_SYN_LAB_Project
-VGA Project Pong Complete Game Verilog Basys 3 FPGA Xilinx Vivado
+VGA Project Pong Complete Game Verilog Basys 3 FPGA Xilinx Vivado.
+"Main" branch control by Basys 3 button.
+"Ping" branch control by External Keyboard.
 
 ## Modular design
 ![design diagram](https://github.com/northsurapee/HW_Project/blob/main/design_diagram.jpg)
