@@ -1,1 +1,1 @@
-# HW_Project
+# HW_SYN_LAB_Project
