@@ -2,7 +2,7 @@
 VGA Project Pong Complete Game Verilog Basys 3 FPGA Xilinx Vivado
 
 ## Modular design
-![alt text](https://github.com/northsurapee/HW_Project/blob/main/image.jpg?raw=true)
+![design diagram](https://github.com/northsurapee/HW_Project/blob/main/design_diagram.jpg)
 
 
 ## Modules Description
