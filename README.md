@@ -17,5 +17,5 @@ VGA Project Pong Complete Game Verilog Basys 3 FPGA Xilinx Vivado
 | State Machine (Main) | This module is the main state machine controlling the game. It transitions between different states (newgame, play, newball). It initiates all modules and outputs signals for VGA including hsync, vsync from “VGA Controller" and rgb from “Graphics Output” and “Text Output”. |
 
 ### Reference
-[FPGA Discovery (Learning How to Work with FPGAs)](https://www.youtube.com/watch?v=tELTeQb-Dc4&t=118s)
-[Basys-3-Keyboard](https://github.com/Digilent/Basys-3-Keyboard/blob/master/src/hdl/PS2Receiver.v)
+-[FPGA Discovery (Learning How to Work with FPGAs)](https://www.youtube.com/watch?v=tELTeQb-Dc4&t=118s)
+-[Basys-3-Keyboard](https://github.com/Digilent/Basys-3-Keyboard/blob/master/src/hdl/PS2Receiver.v)
